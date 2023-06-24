@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+        <h1>Images</h1>
+        
+        <ul>
+            {% for i in images %}
+            <li><a href="image/{{i.id}}"><img src="/data/thumbnails/{{i.thumb}}" /></a></li>
+            {% endfor %}
+        </ul>
+
+    </body>
+</html>
