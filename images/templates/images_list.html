@@ -1,14 +1,22 @@
-<!DOCTYPE html>
-<html>
-    <body>
-
-        <h1>Images</h1>
-        
-        <ul>
-            {% for i in images %}
-            <li><a href="image/{{i.id}}"><img src="/data/thumbnails/{{i.thumb}}" /></a></li>
-            {% endfor %}
-        </ul>
-
-    </body>
-</html>
+{% extends "master.html" %}
+{% block title %}
+Images list
+{% endblock %}
+{% block content %}
+<h1>Images</h1>
+<form action="{% url 'images' %}" method="get">
+    <input name="q" type="text" placeholder="Search...">
+</form>
+{% if is_search %}
+<a href="javascript:history.back();">Revenir à la liste</a>
+{% endif %}
+<ul class="images-container">
+    {% if images %}
+    {% for i in images %}
+    <li class="image"><a href="image/{{i.id}}"><img src="/data/thumbnails/{{i.thumb}}" /></a></li>
+    {% endfor %}
+    {% else %}
+    <p>Pas de résultat</p>
+    {% endif %}
+</ul>
+{% endblock %}

@@ -1,0 +1,12 @@
+body {
+    background-color: lightblue;
+    font-family: verdana;
+}
+.images-container{
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.image{}

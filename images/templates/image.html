@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html>
-
-    <body>
-
-        <h1>{{ image.name }}</h1>
-        
-        <p>{{image.tags}}</p>
-
-        <p><img src="/data/{{image.file}}" /></p>
-
-        <p>Back to <a href="/images">Images</a></p>
-
-    </body>
-</html>
+{% extends "master.html" %}
+{% block title %}
+{{image.name}}
+{% endblock %}
+{% block content %}
+<h1>{{ image.name }}</h1>
+{% for i in tags %}
+<p>{{i}}</p>
+{% endfor %}
+<p><img src="/data/{{image.file}}" /></p>
+<p>Back to <a href="javascript:history.back();">Images</a></p>
+{% endblock %}
