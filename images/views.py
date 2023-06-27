@@ -3,15 +3,19 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import Image
 from ast import literal_eval
+from random import shuffle
 
 # Create your views here.
 def images(request):
     tag = request.GET.get('q')
+    is_random = False # randomize results, should be actionable in UI
     if tag:
         images = Image.objects.filter(tags__contains=tag).values()
         is_search = True
     else:
-        images = Image.objects.all().values()
+        images = list(Image.objects.all().values())
+        if is_random:
+            shuffle(images)
         is_search = False
     # print(q)
     template = loader.get_template('images_list.html')
