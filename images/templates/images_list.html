@@ -1,9 +1,5 @@
 {% extends "master.html" %}
-{% block title %}
-Images list
-{% endblock %}
 {% block content %}
-<h1>Images</h1>
 <form action="{% url 'images' %}" method="get">
     <input name="q" type="text" placeholder="Search...">
 </form>

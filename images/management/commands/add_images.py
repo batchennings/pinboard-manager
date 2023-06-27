@@ -11,7 +11,7 @@
 # python manage.py shell < scripts/add_images.py
 import sys
 from os import listdir, remove
-from os.path import isfile, join, getctime, getmtime
+from os.path import isfile, join, getctime, getmtime, splitext
 import shutil
 # from django.db import models
 from django.core.management.base import BaseCommand, CommandError
@@ -61,7 +61,6 @@ class Command(BaseCommand):
 
         for f in listdir(input_folder):
             if isfile(join(input_folder, f)):
-                # print(getctime(join(input_folder, f)))
                 check_db = check_file(f, presence_list)
                 check_exclusion = check_file(f, exclusion_list)
                 if check_db and check_exclusion:
@@ -75,6 +74,9 @@ class Command(BaseCommand):
         tags = format_tags(tags_in)
 
         for a in add_list:
+
+            a_noext = splitext(a)[0]
+            a_ext = splitext(a)[1]
 
             a_created = datetime.fromtimestamp(getmtime(join(input_folder, a))).strftime('%Y-%m-%d')
             print(a+' créé le '+a_created)
@@ -90,7 +92,7 @@ class Command(BaseCommand):
                 cur_w, cur_h = img.size
 
                 if cur_w > cur_h: 
-                    print('landscape')
+                    # print('landscape')
                     new_width = int(thumb_size*(cur_w/cur_h))
                     th_size = (new_width, thumb_size)
                     crop_box = ((new_width-thumb_size)/2, 0, thumb_size+((new_width-thumb_size)/2), thumb_size)
@@ -98,7 +100,7 @@ class Command(BaseCommand):
                     # resized = img.resize(th_size)
                     resized = img.resize(th_size).crop(crop_box)
                 elif cur_h > cur_w:
-                    print('portrait')
+                    # print('portrait')
                     new_height = int(thumb_size*(cur_h/cur_w))
                     th_size = (thumb_size, new_height)
                     crop_box = (0, (new_height-thumb_size)/2, thumb_size, thumb_size+((new_height-thumb_size)/2))
@@ -110,11 +112,12 @@ class Command(BaseCommand):
                     th_size = (thumb_size,thumb_size)
                     resized = img.resize(th_size)
 
-                print(th_size)
-                resized.convert("RGB").save(join(data_thumbnails_folder, a), "JPEG")
+                # print(th_size)
+                resized.convert("RGB").save(join(data_thumbnails_folder, a_noext+"_mini.jpg"), "JPEG")
+                remove(join(data_thumbnails_folder, a))
 
                 # resized = img.resize((320,320))
-            print(a+' : thumbnail traité')
+            print(a+' : vignette créée')
 
             remove(join(input_folder, a))
             print(a+' supprimé de _new')
@@ -122,5 +125,5 @@ class Command(BaseCommand):
             # a_tags = '['+tags+']'
             print(a+' ajouté à la base, avec les tags : '+tags)
 
-            new_record = Image(name=a, file=a, tags=tags, thumb=a, date_created=a_created)
+            new_record = Image(name=a_noext, file=a, tags=tags, thumb=a_noext+"_mini.jpg", date_created=a_created)
             new_record.save()
