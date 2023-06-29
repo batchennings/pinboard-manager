@@ -3,23 +3,35 @@
 Pinboard Manager
 {% endblock %}
 {% block content %}
-<form action="{% url 'images' %}" method="get">
-    <input name="q" type="text" placeholder="Search...">
-</form>
-<p><a href="http://{{request.get_host}}/images/tags?sort=name">Étiquettes</a>
-<p><a href="http://{{request.get_host}}/images/?random=1">Random</a>
-    <p><a href="http://{{request.get_host}}/images/?sort_by_creation=1">Trié par date</a>
-<p>{{images_qty}} images</p>
+<div id="header" class="fixed bg-gray-100 p-4 w-screen flex align-middle">
+    <form action="{% url 'images' %}" method="get" class="mr-2">
+        <input name="q" type="text" placeholder="Search..." class="rounded p-1">
+    </form>
+    <div class="flex flex-row w-full">
+        <a class="mr-2 button" href="http://{{request.get_host}}/images/tags?sort=name">Étiquettes</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}/images/?random=1">Random</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}/images/?sort_by_creation=1">Trier par date</a>
+    </div>
+    <div class="w-32">
+        <p class="text-sm text-gray-400">{{images_qty}} images</p>
+    </div>
+</div>
+
 {% if is_search %}
-<a href="javascript:history.back();">Revenir à la liste</a>
-{% endif %}
-<ul class="images-container">
-    {% if images %}
-    {% for i in images %}
-    <li class="image"><a href="image/{{i.id}}"><img src="/data/thumbnails/{{i.thumb}}" /></a></li>
-    {% endfor %}
-    {% else %}
-    <p>Pas de résultat</p>
-    {% endif %}
-</ul>
+<div class="fixed bottom-4 right-4">
+<a href="{% url 'images' %}">Revenir à la liste</a>
+</div>
+{% endif %}   
+<div class="wrapper w-screen">
+    <ul class="images-container flex flex-row flex-wrap w-full">
+        {% if images %}
+        {% for i in images %}
+        <li class="image w-44 h-44 m-4"><a href="image/{{i.id}}" class="block"><img src="/data/thumbnails/{{i.thumb}}" class="w-full h-full"/></a></li>
+        {% endfor %}
+        {% else %}
+        <p>Pas de résultat</p>
+        {% endif %}
+    </ul>   
+</div>
+
 {% endblock %}

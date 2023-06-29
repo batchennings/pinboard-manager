@@ -1,0 +1,25 @@
+/*!
+Theme Name: Kernavélo 2023
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body{
+        @apply bg-gray-100 text-gray-900;
+    }
+    a{
+        @apply text-blue-600;
+        &:hover{
+            @apply text-blue-400;
+        }
+    }
+    .button{
+        @apply bg-white text-gray-900 rounded px-3 py-1;
+        
+}
+}
+@layer utilities{
+}
