@@ -39,8 +39,9 @@ class Command(BaseCommand):
 
         def check_file(f, list):
             check_passed = True
+            f_noext = splitext(f)[0]
             for g in list:
-                if g == f:
+                if g == f_noext:
                     check_passed = False
             if check_passed:
                 return True
@@ -52,7 +53,9 @@ class Command(BaseCommand):
             result = '['
             t=0
             while t < len(f_tags):
-                result+='\''+f_tags[t]+'\''
+                u = f_tags[t]
+                u_nospace = u.strip()
+                result+='\''+u_nospace+'\''
                 if t != len(f_tags)-1:
                     result+=','
                 t+=1

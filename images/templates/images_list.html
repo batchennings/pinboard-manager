@@ -1,8 +1,15 @@
 {% extends "master.html" %}
+{% block title %}
+Pinboard Manager
+{% endblock %}
 {% block content %}
 <form action="{% url 'images' %}" method="get">
     <input name="q" type="text" placeholder="Search...">
 </form>
+<p><a href="http://{{request.get_host}}/images/tags?sort=name">Étiquettes</a>
+<p><a href="http://{{request.get_host}}/images/?random=1">Random</a>
+    <p><a href="http://{{request.get_host}}/images/?sort_by_creation=1">Trié par date</a>
+<p>{{images_qty}} images</p>
 {% if is_search %}
 <a href="javascript:history.back();">Revenir à la liste</a>
 {% endif %}

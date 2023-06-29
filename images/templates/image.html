@@ -1,12 +1,22 @@
 {% extends "master.html" %}
 {% block title %}
-{{image.name}}
+Pinboard Manager - {{image.name}}
 {% endblock %}
 {% block content %}
 <h1>{{ image.name }}</h1>
+{% if tag_edit %}
+<form action="{{image.id}}/tags_update" method="post">
+    {% csrf_token %}
+    {{form}}
+    <label>Tags <input type="text" name="tags" id="tags" dirname="fruit.dir" value="{{tags_list_for_edit}}"></label>
+    <input type="submit" value="Mettre à jour" />
+</form>
+{% else %}
 {% for i in tags %}
 <p>{{i}}</p>
 {% endfor %}
+<a href="?tag_edit=1">Éditer les étiquettes</a>
+{% endif %}
 <p><img src="/data/{{image.file}}" /></p>
 <p>Back to <a href="javascript:history.back();">Images</a></p>
 {% endblock %}

@@ -1,0 +1,17 @@
+{% extends "master.html" %}
+{% block title %}
+Pinboard Manager - Liste des étiquettes
+{% endblock %}
+{% block content %}
+<ul class="images-container">
+    {% if tags %}
+    <ul>
+    {% for key,value in tags.items %}
+        <li><a href="http://{{request.get_host}}/images/?q={{key}}">{{key}}</a> - {{value}}</li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>Pas de tags</p>
+    {% endif %}
+</ul>
+{% endblock %}
