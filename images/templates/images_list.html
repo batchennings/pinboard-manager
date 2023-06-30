@@ -3,14 +3,22 @@
 Pinboard Manager
 {% endblock %}
 {% block content %}
-<div id="header" class="fixed bg-gray-100 p-4 w-screen flex align-middle">
+<div id="header" class="fixed bg-gray-100 dark:bg-gray-900 p-4 w-screen flex items-center top-0 left-0">
     <form action="{% url 'images' %}" method="get" class="mr-2">
-        <input name="q" type="text" placeholder="Search..." class="rounded p-1">
+        <input name="q" type="text" placeholder="Search..." class="rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white">
     </form>
     <div class="flex flex-row w-full">
         <a class="mr-2 button" href="http://{{request.get_host}}/images/tags?sort=name">Étiquettes</a>
         <a class="mr-2 button" href="http://{{request.get_host}}/images/?random=1">Random</a>
         <a class="mr-2 button" href="http://{{request.get_host}}/images/?sort_by_creation=1">Trier par date</a>
+    </div>
+    <div class="flex flex-row w-64 items-center">
+        <input type="checkbox" id="label-selector" name="label-selector" class="p-2 rounded mr-2">
+        <label for="label-selector" class="text-sm text-gray-900 dark:text-white">Afficher les noms</label>
+    </div>
+    <div class="flex flex-row w-64 items-center">
+        <input type="checkbox" id="theme-selector" name="theme-selector" class="p-2 rounded mr-2">
+        <label for="theme-selector" class="text-sm text-gray-900 dark:text-white">Thème Sombre</label>
     </div>
     <div class="w-32">
         <p class="text-sm text-gray-400">{{images_qty}} images</p>
@@ -22,11 +30,11 @@ Pinboard Manager
 <a href="{% url 'images' %}">Revenir à la liste</a>
 </div>
 {% endif %}   
-<div class="wrapper w-screen">
+<div class="wrapper w-screen mt-10">
     <ul class="images-container flex flex-row flex-wrap w-full">
         {% if images %}
         {% for i in images %}
-        <li class="image w-44 h-44 m-4"><a href="image/{{i.id}}" class="block"><img src="/data/thumbnails/{{i.thumb}}" class="w-full h-full"/></a></li>
+        <li class="image-thumbnail"><a href="image/{{i.id}}" class="block rounded mr-4 mb-4 w-44 truncate bg-white dark:bg-gray-800"><img src="/data/thumbnails/{{i.thumb}}" class="w-44 h-44 "/><p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p></a></li>
         {% endfor %}
         {% else %}
         <p>Pas de résultat</p>

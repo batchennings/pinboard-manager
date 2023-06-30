@@ -1,13 +1,20 @@
 {% extends "master.html" %}
+{% load static %}
 {% block title %}
 Pinboard Manager - Liste des étiquettes
 {% endblock %}
 {% block content %}
+<div class="flex flex-row mb-4" id="image-header">
+    <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}"><img src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
+    <div class="" id="image-meta">
+        <h1 class="text-lg mb-2">Liste des étiquettes</h1>
+    </div>
+</div>
 <ul class="images-container">
     {% if tags %}
-    <ul>
+    <ul class="flex flex-row flex-wrap">
     {% for key,value in tags.items %}
-        <li><a href="http://{{request.get_host}}/images/?q={{key}}">{{key}}</a> - {{value}}</li>
+        <li class="mb-2 mr-2"><a href="http://{{request.get_host}}/images/?q={{key}}" class="tag text-sm text-gray-900">{{key}} <span class="text-xs text-gray-500 ml-2">{{value}}</span></a></li>
     {% endfor %}
     </ul>
     {% else %}

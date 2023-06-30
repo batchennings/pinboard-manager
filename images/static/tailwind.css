@@ -11,15 +11,47 @@ Theme Name: Kernavélo 2023
         @apply bg-gray-100 text-gray-900;
     }
     a{
-        @apply text-blue-600;
+        @apply text-blue-600 dark:text-blue-200 transition-all delay-75;
         &:hover{
             @apply text-blue-400;
         }
     }
     .button{
-        @apply bg-white text-gray-900 rounded px-3 py-1;
-        
+        @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded px-3 py-1;
+        &.submit{
+            @apply bg-blue-600 text-white cursor-pointer;
+        }
+    }
+    .image-thumbnail{
+        a{
+
+            @apply transition-all delay-75;
+            img{
+                @apply transition-all delay-75;
+                
 }
+            &:hover{
+                @apply bg-gray-200;
+                img{
+                    @apply opacity-75;
+                    
+}
+            }
+        }
+}
+    .tag{
+        @apply rounded-full text-xs bg-gray-200 text-gray-500 px-3 py-1 inline-block;
+
+        &:hover{
+            @apply bg-gray-500 text-gray-100;
+        }
+        &.edit{
+            @apply bg-gray-100 text-blue-600;
+            &:hover{
+                @apply bg-blue-600 text-white;
+            }
+        }
+    }
 }
 @layer utilities{
 }

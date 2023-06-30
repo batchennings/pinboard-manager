@@ -16,6 +16,10 @@ Theme Name: Kernavélo 2023
             @apply text-blue-400;
         }
     }
+    .button{
+        @apply bg-white text-gray-900 rounded px-3 py-1;
+        
+}
 }
 @layer utilities{
 }
