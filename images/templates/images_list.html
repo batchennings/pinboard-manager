@@ -3,23 +3,30 @@
 Pinboard Manager
 {% endblock %}
 {% block content %}
-<div id="header" class="fixed bg-gray-100 dark:bg-gray-900 p-4 w-screen flex items-center top-0 left-0">
+<div id="header" class="fixed bg-gray-100 dark:bg-gray-900 p-4 w-screen flex items-center top-0 left-0 z-40">
     <form action="{% url 'images' %}" method="get" class="mr-2">
         <input name="q" type="text" placeholder="Search..." class="rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white">
     </form>
     <div class="flex flex-row w-full">
-        <a class="mr-2 button" href="http://{{request.get_host}}/images/tags?sort=name">Étiquettes</a>
         <a class="mr-2 button" href="http://{{request.get_host}}/images/?random=1">Random</a>
         <a class="mr-2 button" href="http://{{request.get_host}}/images/?sort_by_creation=1">Trier par date</a>
+
+        <div class="flex flex-row contains mr-4 items-center">
+            <input type="checkbox" id="label-selector" name="label-selector" class="p-2 rounded mr-2">
+            <label for="label-selector" class="text-sm text-gray-900 dark:text-white">Noms</label>
+        </div>
+        <div class="flex flex-row contains items-center mr-6">
+            <input type="checkbox" id="theme-selector" name="theme-selector" class="p-2 rounded mr-2">
+            <label for="theme-selector" class="text-sm text-gray-900 dark:text-white">Sombre</label>
+        </div>
+        <div class="flex flex-row">
+            <a class="button" id="th-size-sm">Petit</a>
+            <a class="button active" id="th-size-md">Moyen</a>
+            <a class="button" id="th-size-lg">Grand</a>
+        </div>
     </div>
-    <div class="flex flex-row w-64 items-center">
-        <input type="checkbox" id="label-selector" name="label-selector" class="p-2 rounded mr-2">
-        <label for="label-selector" class="text-sm text-gray-900 dark:text-white">Afficher les noms</label>
-    </div>
-    <div class="flex flex-row w-64 items-center">
-        <input type="checkbox" id="theme-selector" name="theme-selector" class="p-2 rounded mr-2">
-        <label for="theme-selector" class="text-sm text-gray-900 dark:text-white">Thème Sombre</label>
-    </div>
+
+    <a class="mr-4" href="http://{{request.get_host}}/images/tags?sort=name">Étiquettes</a>
     <div class="w-32">
         <p class="text-sm text-gray-400">{{images_qty}} images</p>
     </div>
@@ -30,11 +37,11 @@ Pinboard Manager
 <a href="{% url 'images' %}">Revenir à la liste</a>
 </div>
 {% endif %}   
-<div class="wrapper w-screen mt-10">
-    <ul class="images-container flex flex-row flex-wrap w-full">
+<div class="wrapper w-screen mt-12">
+    <ul class="images-container flex flex-row flex-wrap w-full size-md" id="thumbnails-list">
         {% if images %}
         {% for i in images %}
-        <li class="image-thumbnail"><a href="image/{{i.id}}" class="block rounded mr-4 mb-4 w-44 truncate bg-white dark:bg-gray-800"><img src="/data/thumbnails/{{i.thumb}}" class="w-44 h-44 "/><p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p></a></li>
+        <li class="image-thumbnail"><a href="image/{{i.id}}" class="block rounded mr-4 mb-4 truncate bg-white dark:bg-gray-800"><img src="/data/thumbnails/{{i.thumb}}"/><p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p></a></li>
         {% endfor %}
         {% else %}
         <p>Pas de résultat</p>
