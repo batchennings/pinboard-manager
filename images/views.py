@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from os import listdir, remove
+from os.path import isfile, join, getctime, getmtime, splitext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
@@ -10,6 +12,10 @@ from urllib.parse import urlparse
 from urllib.parse import parse_qs
 import collections
 from .forms import TagsForm
+
+
+data_folder='/Users/patjennings/Documents/pinboard_manager/data'
+data_thumbnails_folder='/Users/patjennings/Documents/pinboard_manager/data/thumbnails'
 
 # Create your views here.
 def images(request):
@@ -47,20 +53,6 @@ def images(request):
     }
     # tags_list()
     return HttpResponse(template.render(context, request))
-
-def format_tags_update(tags_in):
-    f_tags = tags_in.split(",")
-    result = '['
-    t=0
-    while t < len(f_tags):
-        u = f_tags[t]
-        u_nospace = u.strip()
-        result+='\''+u_nospace+'\''
-        if t != len(f_tags)-1:
-            result+=','
-        t+=1
-    result+= ']'
-    return result
 
 def tags_update(request, id):
     # if this is a POST request we need to process the form data
@@ -121,6 +113,7 @@ def tags(request):
 
 def image(request, id):
     tag_edit = request.GET.get('tag_edit') # name or value
+    action = request.GET.get('action')
     is_tag_edit = False
     if tag_edit == '1':
         is_tag_edit = True
@@ -135,9 +128,36 @@ def image(request, id):
         'image': image,
         'tags' : get_tags,
         'tags_list_for_edit': tags_list_for_edit,
-        'tag_edit' : is_tag_edit
+        'tag_edit' : is_tag_edit,
+        'action' : action
     }
     return HttpResponse(template.render(context, request))
+
+def image_delete(request,id):
+    print(str(id)+' will be deleted')
+    image = Image.objects.get(id=id)
+    # delete image
+    remove(join(data_folder, image.file))
+    # delete thumbnail
+    remove(join(data_thumbnails_folder, image.thumb))
+    # remove from base with id
+    image.delete()
+    print(str(id)+' deleted')
+    return HttpResponseRedirect("/images?")
+
+def format_tags_update(tags_in):
+    f_tags = tags_in.split(",")
+    result = '['
+    t=0
+    while t < len(f_tags):
+        u = f_tags[t]
+        u_nospace = u.strip()
+        result+='\''+u_nospace+'\''
+        if t != len(f_tags)-1:
+            result+=','
+        t+=1
+    result+= ']'
+    return result
 
 def get_tags_for_input(tags_list):
     result = ''

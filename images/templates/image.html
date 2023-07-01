@@ -6,10 +6,22 @@ Pinboard Manager - {{image.name}}
 {% endblock %}
 
 {% block content %}
+{% if action == 'delete' %}
+<div id="delete-confirmation" class="z-50 w-full h-full absolute bg-black/75 top-0 left-0 flex">
+    <div class="w-96 mx-auto my-auto p-4 rounded bg-white flex flex-col">
+        <div class="mb-4">Effacer l'image ?</div>
+        <div class="flex flex-row">
+            <a href="{{image.id}}/delete" class="button bg-red-100 text-red-600">Supprimer</a>
+            <a href="{{image.id}}" class="button">Annuler</a>
+        </div>
+    </div>
+    <!-- <div class="bg-black opacity-75 w-full h-full absolute"></div> -->
+</div>
+{% endif %}
 <div class="flex flex-row" id="image-header">
     <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}"><img src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
     <div class="" id="image-meta">
-<h1 class="text-lg mb-2">{{ image.name }}</h1>
+        <h1 class="text-lg mb-2">{{ image.name }}</h1><a href="{{image.id}}?action=delete" class="text-xs">Supprimer</a>
 {% if tag_edit %}
 <form action="{{image.id}}/tags_update" method="post">
     {% csrf_token %}
