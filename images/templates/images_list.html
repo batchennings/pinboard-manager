@@ -1,12 +1,15 @@
 {% extends "master.html" %}
+{% load static %}
 {% block title %}
 Pinboard Manager
 {% endblock %}
 {% block content %}
 <div id="header" class="fixed bg-gray-100 dark:bg-gray-900 p-4 w-screen flex items-center top-0 left-0 z-40">
-    <form action="{% url 'images' %}" method="get" class="mr-2">
-        <input name="q" type="text" placeholder="Search..." class="rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white">
-    </form>
+    <div id="search-form" class="">
+        <form action="{% url 'images' %}" method="get" class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
+            <input name="q" type="text" placeholder="Search...">
+        </form>
+    </div>
     <div class="flex flex-row w-full">
         <a class="mr-2 button" href="http://{{request.get_host}}/images/?random=1">Random</a>
         <a class="mr-2 button" href="http://{{request.get_host}}/images/?sort_by_creation=1">Trier par date</a>
@@ -32,12 +35,13 @@ Pinboard Manager
     </div>
 </div>
 
-{% if is_search %}
-<div class="fixed bottom-4 right-4">
-<a href="{% url 'images' %}">Revenir à la liste</a>
-</div>
-{% endif %}   
 <div class="wrapper w-screen mt-12">
+    {% if is_search %}
+    <div class="flex flex-row mb-4 items-center">
+        <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}"><img src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
+        <div class="">Résultats pour <span class="font-bold">{{search}}</span></div>
+    </div>
+    {% endif %}   
     <ul class="images-container flex flex-row flex-wrap w-full size-md" id="thumbnails-list">
         {% if images %}
         {% for i in images %}

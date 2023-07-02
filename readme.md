@@ -20,3 +20,10 @@ python manage.py watch_static & python manage.py runserver
 ```
 
 Les deux démons doivent être lancés en même temps
+
+# Recherche
+Pour rechercher un tag, on ajoute `:` devant celui-ci
+
+```bash
+:typographie :couleur
+```

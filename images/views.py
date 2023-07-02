@@ -10,7 +10,10 @@ from ast import literal_eval
 from random import shuffle
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
+from django.db.models import Q
 import collections
+import operator
+from functools import reduce
 from .forms import TagsForm
 
 
@@ -19,20 +22,52 @@ data_thumbnails_folder='/Users/patjennings/Documents/pinboard_manager/data/thumb
 
 # Create your views here.
 def images(request):
-    tag = request.GET.get('q')
+    search = request.GET.get('q')
     sort_by_creation = request.GET.get('sort_by_creation')
     random = request.GET.get('random')
 
     is_random = False
     is_sorted_by_creation = False
+    is_search = False
 
     if random == '1':
         is_random = True
     if sort_by_creation == '1':
         is_sorted_by_creation = True
-    if tag:
-        print('hasTag')
-        images = list(Image.objects.filter(tags__contains=tag).values())
+    if search:
+        spl_search = search.split(" ")
+        tags_terms = []
+        str_terms = []
+        for t in spl_search:
+            # print(t.find(':'))
+            if t.find(':') != -1:
+                t_clean = t.split(':')
+                tags_terms.append(t_clean[1])
+                #
+            else:
+                str_terms.append(t)
+                #
+        # print(tags_terms)
+        # print(str_terms)
+        str_tags_terms = str(tags_terms)
+        print(tags_terms)
+        # images = list(Image.objects.filter(tags__contains=search).values())
+        # images = list(Image.objects.filter(tags__icontains=['ville','typographie']).values())
+        # images = list(Image.objects.filter(tags__icontains='ville', tags__icontains='typographie').values())
+        # images =
+
+        # la bonne ligne de code
+        q_list = [] 
+        for q in tags_terms:
+            q_list.append(Q(tags__contains=q))
+        print(q_list)
+        # criterion1 = Q(tags__contains="illustration")
+        # criterion2 = Q(tags__contains="motion")
+        images = Image.objects.filter(reduce(operator.and_, q_list))
+        # images = Image.objects.filter()
+        ###
+
+        # print(images)
         images_qty = len(images)
         is_search = True
     else:
@@ -49,7 +84,8 @@ def images(request):
     context = {
         'images': images,
         'images_qty': images_qty,
-        'is_search': is_search
+        'is_search': is_search,
+        'search' : search
     }
     # tags_list()
     return HttpResponse(template.render(context, request))
