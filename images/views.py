@@ -58,25 +58,12 @@ def images(request):
             if s != '':
                 str_terms.append(s.strip())
 
-
-
-
-        # for t in spl_search:
-            # print(t.find(':'))
-            # if t.find(':') != -1:
-                # t_clean = t.split(':')
-                # tags_terms.append(t_clean[1])
-            # else:
-                # str_terms.append(t)
-
         q_list = []
         for qt in tags_terms:
             q_list.append(Q(tags__contains=qt))
         for qs in str_terms:
             q_list.append(Q(name__contains=qs))
-        images = Image.objects.filter(reduce(operator.and_, q_list))
-
-        print(q_list)
+        images = list(Image.objects.filter(reduce(operator.and_, q_list)))
 
         images_qty = len(images)
         is_search = True
@@ -86,21 +73,40 @@ def images(request):
         is_search = False
 
     if is_sorted_by_creation:
-        images = list(Image.objects.order_by('-date_created'))
+        # print(images)
+        # images = list(images.order_by('-date_created'))
+        def img_date(elem):
+            return elem['date_created']
+        # images = (list(images.sort()))
+        images.sort(reverse=True, key=img_date)
+        # images.sorted()
+        # print(type(images))
+        # images = sorted(images)
+        # for f in images:
+            # print(f['id'])
     if is_random:
         shuffle(images)
 
     template = loader.get_template('images_list.html')
+    # print(random)
+    # print(sort_by_creation)
     context = {
         'images': images,
         'images_qty': images_qty,
         'is_search': is_search,
-        'search' : search
+        'search' : search,
+        'sort_by_creation': sort_by_creation,
+        'random': random
     }
     # tags_list()
     return HttpResponse(template.render(context, request))
 
 def tags_update(request, id):
+    search = request.GET.get('q')
+    sort_by_creation = request.GET.get('sort_by_creation')
+    random = request.GET.get('random')
+    print('//////////// tags_update')
+    print('//////////////::', random)
     # if this is a POST request we need to process the form data
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
@@ -124,13 +130,20 @@ def tags_update(request, id):
             # print(new_record)
             # ...
             # redirect to a new URL:
-            return HttpResponseRedirect("/images/image/"+str(id))
+            return HttpResponseRedirect("/images/image/"+str(id)+"?q="+search+"&sort_by_creation="+sort_by_creation+"&random="+random)
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = TagsForm()
 
-    return render(request, "image.html", {"form": form})
+    print('////////////////:',search)
+
+    return render(request, "image.html", {
+        "form": form,
+        'search' : search,
+        'sort_by_creation': sort_by_creation,
+        'random': random
+    })
 
 def tags(request):
     sort = request.GET.get('sort') # name or value
@@ -158,6 +171,9 @@ def tags(request):
     return HttpResponse(template.render(context, request))
 
 def image(request, id):
+    search = request.GET.get('q')
+    sort_by_creation = request.GET.get('sort_by_creation')
+    random = request.GET.get('random')
     tag_edit = request.GET.get('tag_edit') # name or value
     action = request.GET.get('action')
     is_tag_edit = False
@@ -175,7 +191,10 @@ def image(request, id):
         'tags' : get_tags,
         'tags_list_for_edit': tags_list_for_edit,
         'tag_edit' : is_tag_edit,
-        'action' : action
+        'action' : action,
+        'search' : search,
+        'sort_by_creation': sort_by_creation,
+        'random': random
     }
     return HttpResponse(template.render(context, request))
 

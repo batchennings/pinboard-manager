@@ -6,13 +6,18 @@ Pinboard Manager
 {% block content %}
 <div id="header" class="fixed bg-gray-100 dark:bg-gray-900 p-4 w-screen flex items-center top-0 left-0 z-40">
     <div id="search-form" class="">
-        <form action="{% url 'images' %}" method="get" class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
-            <input name="q" type="text" placeholder="Search...">
+        <form action="{% url 'images' %}" method="get" >
+            <input name="q" type="text" placeholder="Search..." class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
         </form>
     </div>
     <div class="flex flex-row w-full">
+        {% if search%}
+        <a class="mr-2 button" href="http://{{request.get_host}}/images/?random=1&q={{search}}">Random</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}/images/?sort_by_creation=1&q={{search}}">Trier par date</a>
+        {% else %}
         <a class="mr-2 button" href="http://{{request.get_host}}/images/?random=1">Random</a>
         <a class="mr-2 button" href="http://{{request.get_host}}/images/?sort_by_creation=1">Trier par date</a>
+        {% endif %}
 
         <div class="flex flex-row contains mr-4 items-center">
             <input type="checkbox" id="label-selector" name="label-selector" class="p-2 rounded mr-2">
@@ -45,7 +50,11 @@ Pinboard Manager
     <ul class="images-container flex flex-row flex-wrap w-full size-md" id="thumbnails-list">
         {% if images %}
         {% for i in images %}
-        <li class="image-thumbnail"><a href="image/{{i.id}}" class="block rounded mr-4 mb-4 truncate bg-white dark:bg-gray-800"><img src="/data/thumbnails/{{i.thumb}}"/><p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p></a></li>
+        {% if search %}
+        <li class="image-thumbnail"><a href="image/{{i.id}}?q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}" class="block rounded mr-4 mb-4 truncate bg-white dark:bg-gray-800"><img src="/data/thumbnails/{{i.thumb}}"/><p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p></a></li>
+        {% else %}
+        <li class="image-thumbnail"><a href="image/{{i.id}}?random={{random}}&sort_by_creation={{sort_by_creation}}" class="block rounded mr-4 mb-4 truncate bg-white dark:bg-gray-800"><img src="/data/thumbnails/{{i.thumb}}"/><p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p></a></li>
+        {% endif%}
         {% endfor %}
         {% else %}
         <p>Pas de résultat</p>

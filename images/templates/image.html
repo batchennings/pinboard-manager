@@ -19,11 +19,20 @@ Pinboard Manager - {{image.name}}
 </div>
 {% endif %}
 <div class="flex flex-row" id="image-header">
-    <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}"><img src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
+    {% if search %}
+    <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}?q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}"><img src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
+    {% else %}
+    <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}?random={{random}}&sort_by_creation={{sort_by_creation}}"><img src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
+    {% endif %}
     <div class="" id="image-meta">
-        <h1 class="text-lg mb-2">{{ image.name }}</h1><a href="{{image.id}}?action=delete" class="text-xs">Supprimer</a>
+        <h1 class="text-lg mb-2">{{ image.name }}</h1>
+        <a href="{{image.id}}?action=delete" class="text-xs">Supprimer</a>
 {% if tag_edit %}
-<form action="{{image.id}}/tags_update" method="post">
+        {% if search %}
+        <form action="{{image.id}}/tags_update?q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}" method="post">
+    {% else %}
+        <form action="{{image.id}}/tags_update?random={{random}}&sort_by_creation={{sort_by_creation}}" method="post">
+    {% endif %}
     {% csrf_token %}
     {{form}}
     <label><input type="text" name="tags" id="tags" dirname="fruit.dir" value="{{tags_list_for_edit}}" class="rounded px-2 py-1"></label>
@@ -36,7 +45,7 @@ Pinboard Manager - {{image.name}}
 {% for i in tags %}
     <li class="mr-1"><a href="http://{{request.get_host}}/images/?q=:{{i}}:" class="tag">:{{i}}:</a></li>
 {% endfor %}
-    <li><a href="?tag_edit=1" class="tag edit">Éditer les étiquettes</a></li>
+    <li><a href="?tag_edit=1&q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}" class="tag edit">Éditer les étiquettes</a></li>
 </ul>
     </div>
 </div>
