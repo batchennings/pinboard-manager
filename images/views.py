@@ -58,9 +58,10 @@ def images(request):
 
         # la bonne ligne de code
         q_list = [] 
-        for q in tags_terms:
-            q_list.append(Q(tags__contains=q))
-        print(q_list)
+        for qt in tags_terms:
+            q_list.append(Q(tags__contains=qt))
+        for qs in str_terms:
+            q_list.append(Q(name__contains=qs))
         # criterion1 = Q(tags__contains="illustration")
         # criterion2 = Q(tags__contains="motion")
         images = Image.objects.filter(reduce(operator.and_, q_list))

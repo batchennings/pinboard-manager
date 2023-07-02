@@ -27,3 +27,16 @@ Pour rechercher un tag, on ajoute `:` devant celui-ci
 ```bash
 :typographie :couleur
 ```
+
+Pour rechercher un terme dans le nom, on ne met rien devant
+```bash
+gerstner
+```
+
+Et on peut bien sûr croiser les deux
+```bash
+:typographie :couleur gerstner
+```
+
+> La recherche est de type AND. on recherche : 
+> tag contient 'typographie' AND tag contient 'couleur' AND name contient 'gerstner'
