@@ -13,6 +13,7 @@ from urllib.parse import parse_qs
 from django.db.models import Q
 import collections
 import operator
+import re
 from functools import reduce
 from .forms import TagsForm
 
@@ -36,39 +37,47 @@ def images(request):
         is_sorted_by_creation = True
     if search:
         spl_search = search.split(" ")
+
         tags_terms = []
         str_terms = []
-        for t in spl_search:
-            # print(t.find(':'))
-            if t.find(':') != -1:
-                t_clean = t.split(':')
-                tags_terms.append(t_clean[1])
-                #
-            else:
-                str_terms.append(t)
-                #
-        # print(tags_terms)
-        # print(str_terms)
-        str_tags_terms = str(tags_terms)
-        print(tags_terms)
-        # images = list(Image.objects.filter(tags__contains=search).values())
-        # images = list(Image.objects.filter(tags__icontains=['ville','typographie']).values())
-        # images = list(Image.objects.filter(tags__icontains='ville', tags__icontains='typographie').values())
-        # images =
 
-        # la bonne ligne de code
-        q_list = [] 
+        # find tags, and fill the t_tags list
+        str_spl = re.findall(':[a-zA-Z0-9éàèùûôî\ ]+:', search)
+        for t in str_spl:
+            tags_terms.append(t.strip(':'))
+
+        # remove tags from original string
+        clean_str = search
+        for u in str_spl:
+            clean_str = clean_str.replace(u, '')
+            print(clean_str)
+
+        # now, with the new string, get terms
+        spl_str = clean_str.split(' ')
+        for s in spl_str:
+            if s != '':
+                str_terms.append(s.strip())
+
+
+
+
+        # for t in spl_search:
+            # print(t.find(':'))
+            # if t.find(':') != -1:
+                # t_clean = t.split(':')
+                # tags_terms.append(t_clean[1])
+            # else:
+                # str_terms.append(t)
+
+        q_list = []
         for qt in tags_terms:
             q_list.append(Q(tags__contains=qt))
         for qs in str_terms:
             q_list.append(Q(name__contains=qs))
-        # criterion1 = Q(tags__contains="illustration")
-        # criterion2 = Q(tags__contains="motion")
         images = Image.objects.filter(reduce(operator.and_, q_list))
-        # images = Image.objects.filter()
-        ###
 
-        # print(images)
+        print(q_list)
+
         images_qty = len(images)
         is_search = True
     else:

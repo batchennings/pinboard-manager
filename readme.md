@@ -22,10 +22,10 @@ python manage.py watch_static & python manage.py runserver
 Les deux démons doivent être lancés en même temps
 
 # Recherche
-Pour rechercher un tag, on ajoute `:` devant celui-ci
+Pour rechercher un tag, on entoure le terme de `:`
 
 ```bash
-:typographie :couleur
+:typographie: :couleur:
 ```
 
 Pour rechercher un terme dans le nom, on ne met rien devant
@@ -35,7 +35,7 @@ gerstner
 
 Et on peut bien sûr croiser les deux
 ```bash
-:typographie :couleur gerstner
+:typographie: :couleur: gerstner
 ```
 
 > La recherche est de type AND. on recherche : 
