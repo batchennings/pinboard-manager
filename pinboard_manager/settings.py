@@ -127,8 +127,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = '/Users/patjennings/Documents/pinboard_manager/data'
 MEDIA_URL = 'data/'
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    }
-}
+# CACHES = {
+    # 'default': {
+        # 'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    # }
+# }

@@ -40,14 +40,14 @@ Pinboard Manager
     </div>
 </div>
 
-<div class="wrapper w-screen mt-12">
+<div class="wrapper w-full mt-12">
     {% if is_search %}
     <div class="flex flex-row mb-4 items-center">
         <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}"><img src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
         <div class="">Résultats pour <span class="font-bold">{{search}}</span></div>
     </div>
     {% endif %}   
-    <ul class="images-container flex flex-row flex-wrap w-full size-md" id="thumbnails-list">
+    <ul class="images-container flex flex-row flex-wrap justify-between w-full size-md" id="thumbnails-list">
         {% if images %}
         {% for i in images %}
         {% if search %}
