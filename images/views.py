@@ -16,6 +16,7 @@ import operator
 import re
 from functools import reduce
 from .forms import TagsForm
+from var_dump import var_dump
 
 
 data_folder='/Users/patjennings/Documents/pinboard_manager/data'
@@ -42,7 +43,7 @@ def images(request):
         str_terms = []
 
         # find tags, and fill the t_tags list
-        str_spl = re.findall(':[a-zA-Z0-9éàèùûôî\ ]+:', search)
+        str_spl = re.findall(':[a-zA-Z0-9éàèùûôî\ \-_]+:', search)
         for t in str_spl:
             tags_terms.append(t.strip(':'))
 
@@ -76,9 +77,13 @@ def images(request):
         # print(images)
         # images = list(images.order_by('-date_created'))
         def img_date(elem):
-            return elem['date_created']
+            print(elem)
+            return elem.date_created
         # images = (list(images.sort()))
         images.sort(reverse=True, key=img_date)
+        # print(images[0].date_created)
+        # var_dump(images)
+        # print vars(images)
         # images.sorted()
         # print(type(images))
         # images = sorted(images)
