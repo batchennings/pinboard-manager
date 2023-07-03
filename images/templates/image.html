@@ -50,7 +50,15 @@ Pinboard Manager - {{image.name}}
     </div>
 </div>
 {% endif %}
+    {% if image.type == 'image' %}
     <div id="image">
         <img src="/data/{{image.file}}" class="mx-auto mt-4 block" />
     </div>
+    {% elif image.type == 'video' %}
+    <div id="image">
+        <video class="mx-auto mt-4 block" controls>
+            <source src="/data/{{image.file}}">
+        </video>
+    </div>
+    {% endif %}
 {% endblock %}

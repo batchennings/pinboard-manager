@@ -9,6 +9,7 @@ def images_path():
 class Image(models.Model):
     name = models.CharField(max_length=255)
     file = models.TextField()
+    type = models.TextField(default='image')
     thumb = models.TextField(null=True)
     tags = models.TextField()
     date_created = models.DateField(default=date.today)
