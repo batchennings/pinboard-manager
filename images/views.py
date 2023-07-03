@@ -69,20 +69,20 @@ def images(request):
         images_qty = len(images)
         is_search = True
     else:
-        images = list(Image.objects.all().values())
+        images = list(Image.objects.all())
         images_qty = len(images)
         is_search = False
 
     if is_sorted_by_creation:
+        # var_dump(images)
         # print(images)
         # images = list(images.order_by('-date_created'))
         def img_date(elem):
-            print(elem)
+            # print(elem['date_created'])
             return elem.date_created
         # images = (list(images.sort()))
         images.sort(reverse=True, key=img_date)
         # print(images[0].date_created)
-        # var_dump(images)
         # print vars(images)
         # images.sorted()
         # print(type(images))
