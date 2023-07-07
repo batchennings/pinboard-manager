@@ -7,7 +7,12 @@ Pinboard Manager
 <div id="header" class="fixed bg-gray-100 dark:bg-gray-900 p-4 w-screen flex items-center top-0 left-0 z-40">
     <div id="search-form" class="">
         <form action="{% url 'images' %}" method="get" >
+
+            {% if search%}
+            <input name="q" type="text" placeholder="Search..." value="{{search}}" class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
+            {% else %}
             <input name="q" type="text" placeholder="Search..." class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
+            {% endif %}
         </form>
     </div>
     <div class="flex flex-row w-full">

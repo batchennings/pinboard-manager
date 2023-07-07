@@ -27,38 +27,38 @@ Pinboard Manager - {{image.name}}
     <div class="" id="image-meta">
         <h1 class="text-lg mb-2">{{ image.name }}</h1>
         <a href="{{image.id}}?action=delete" class="text-xs">Supprimer</a>
-{% if tag_edit %}
+        {% if tag_edit %}
         {% if search %}
         <form action="{{image.id}}/tags_update?q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}" method="post">
+            {% else %}
+            <form action="{{image.id}}/tags_update?random={{random}}&sort_by_creation={{sort_by_creation}}" method="post">
+                {% endif %}
+                {% csrf_token %}
+                {{form}}
+                <label><input type="text" name="tags" id="tags" dirname="fruit.dir" value="{{tags_list_for_edit}}" class="rounded px-2 py-1"></label>
+                <input type="submit" value="Mettre à jour" class="button submit"/>
+            </form>
+    </div>
+    </<div class=""></div>
     {% else %}
-        <form action="{{image.id}}/tags_update?random={{random}}&sort_by_creation={{sort_by_creation}}" method="post">
-    {% endif %}
-    {% csrf_token %}
-    {{form}}
-    <label><input type="text" name="tags" id="tags" dirname="fruit.dir" value="{{tags_list_for_edit}}" class="rounded px-2 py-1"></label>
-    <input type="submit" value="Mettre à jour" class="button submit"/>
-</form>
-    </div>
-</<div class=""></div>
-{% else %}
-<ul class="tags-list flex flex-row">
-{% for i in tags %}
-    <li class="mr-1"><a href="http://{{request.get_host}}/images/?q=:{{i}}:" class="tag">:{{i}}:</a></li>
-{% endfor %}
-    <li><a href="?tag_edit=1&q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}" class="tag edit">Éditer les étiquettes</a></li>
-</ul>
-    </div>
+    <ul class="tags-list flex flex-row">
+        {% for i in tags %}
+        <li class="mr-1"><a href="http://{{request.get_host}}/images/?q=:{{i}}:" class="tag">:{{i}}:</a></li>
+        {% endfor %}
+        <li><a href="?tag_edit=1&q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}" class="tag edit">Éditer les étiquettes</a></li>
+    </ul>
+</div>
 </div>
 {% endif %}
-    {% if image.type == 'image' %}
-    <div id="image">
-        <img src="/data/{{image.file}}" class="mx-auto mt-4 block" />
-    </div>
-    {% elif image.type == 'video' %}
-    <div id="image">
-        <video class="mx-auto mt-4 block" controls>
-            <source src="/data/{{image.file}}">
-        </video>
-    </div>
-    {% endif %}
+{% if image.type == 'image' %}
+<div id="image">
+    <img src="/data/{{image.file}}" class="mx-auto mt-4 block" />
+</div>
+{% elif image.type == 'video' %}
+<div id="image">
+    <video class="mx-auto mt-4 block" controls>
+        <source src="/data/{{image.file}}">
+    </video>
+</div>
+{% endif %}
 {% endblock %}
