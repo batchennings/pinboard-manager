@@ -1,7 +1,7 @@
 # Pinboard manager
 Gestion locale d'images, navigation, système de tags, recherche.
 
-Django+SQLite
+`Django` + `SQLite`
 
 # Ajouter des images
 ```bash
