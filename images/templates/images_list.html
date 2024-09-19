@@ -17,11 +17,11 @@ Pinboard Manager
     </div>
     <div class="flex flex-row w-full">
         {% if search%}
-        <a class="mr-2 button" href="http://{{request.get_host}}/images/?random=1&q={{search}}">Random</a>
-        <a class="mr-2 button" href="http://{{request.get_host}}/images/?sort_by_creation=1&q={{search}}">Trier par date</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}?random=1&q={{search}}">Random</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}?sort_by_creation=1&q={{search}}">Trier par date</a>
         {% else %}
-        <a class="mr-2 button" href="http://{{request.get_host}}/images/?random=1">Random</a>
-        <a class="mr-2 button" href="http://{{request.get_host}}/images/?sort_by_creation=1">Trier par date</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}?random=1">Random</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}?sort_by_creation=1">Trier par date</a>
         {% endif %}
 
         <div class="flex flex-row contains mr-4 items-center">
@@ -39,7 +39,7 @@ Pinboard Manager
         </div>
     </div>
 
-    <a class="mr-4" href="http://{{request.get_host}}/images/tags?sort=name">Étiquettes</a>
+    <a class="mr-4" href="http://{{request.get_host}}/tags?sort=name">Étiquettes</a>
     <div class="w-32">
         <p class="text-sm text-gray-400">{{images_qty}} images</p>
     </div>

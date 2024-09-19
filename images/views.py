@@ -135,7 +135,7 @@ def tags_update(request, id):
             # print(new_record)
             # ...
             # redirect to a new URL:
-            return HttpResponseRedirect("/images/image/"+str(id)+"?q="+search+"&sort_by_creation="+sort_by_creation+"&random="+random)
+            return HttpResponseRedirect("/image/"+str(id)+"?q="+search+"&sort_by_creation="+sort_by_creation+"&random="+random)
 
     # if a GET (or any other method) we'll create a blank form
     else:

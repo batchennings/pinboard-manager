@@ -43,7 +43,7 @@ Pinboard Manager - {{image.name}}
     {% else %}
     <ul class="tags-list flex flex-row">
         {% for i in tags %}
-        <li class="mr-1"><a href="http://{{request.get_host}}/images/?q=:{{i}}:" class="tag">:{{i}}:</a></li>
+        <li class="mr-1"><a href="http://{{request.get_host}}?q=:{{i}}:" class="tag">:{{i}}:</a></li>
         {% endfor %}
         <li><a href="?tag_edit=1&q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}" class="tag edit">Éditer les étiquettes</a></li>
     </ul>
