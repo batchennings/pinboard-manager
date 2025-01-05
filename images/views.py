@@ -15,7 +15,8 @@ import collections
 import operator
 import re
 from functools import reduce
-from .forms import TagsForm
+from .forms import TagsForm, NameForm
+
 from var_dump import var_dump
 
 
@@ -27,6 +28,8 @@ def images(request):
     search = request.GET.get('q')
     sort_by_creation = request.GET.get('sort_by_creation')
     random = request.GET.get('random')
+    action = request.GET.get('action')
+    items = []
 
     is_random = False
     is_sorted_by_creation = False
@@ -74,74 +77,78 @@ def images(request):
         is_search = False
 
     if is_sorted_by_creation:
-        # var_dump(images)
-        # print(images)
-        # images = list(images.order_by('-date_created'))
         def img_date(elem):
-            # print(elem['date_created'])
             return elem.date_created
-        # images = (list(images.sort()))
         images.sort(reverse=True, key=img_date)
-        # print(images[0].date_created)
-        # print vars(images)
-        # images.sorted()
-        # print(type(images))
-        # images = sorted(images)
-        # for f in images:
-            # print(f['id'])
+        
     if is_random:
         shuffle(images)
+        
+    if request.method == "POST":
+        items = request.POST.getlist('image-item')
+        print(items)
 
     template = loader.get_template('images_list.html')
-    # print(random)
-    # print(sort_by_creation)
     context = {
         'images': images,
         'images_qty': images_qty,
         'is_search': is_search,
         'search' : search,
         'sort_by_creation': sort_by_creation,
-        'random': random
+        'random': random,
+        'action' : action,
+        'items' : items
     }
-    # tags_list()
     return HttpResponse(template.render(context, request))
+
+def bulk_tags_update(request):
+    search = request.GET.get('q')
+    print(request)
+    
+    template = loader.get_template('images_list.html')
+    context = {
+        'search' : search,
+    }
+    return HttpResponse(template.render(context, request))
+    # prendre les éléments issus de la modale de /images, et les écrire dans les entrées indiquées 
+
+def bulk_names_update(request):
+    search = request.GET.get('q')
+    print(request)
+    template = loader.get_template('images_list.html')
+    context = {
+        'search' : search,
+    }
+    return HttpResponseRedirect("/?q="+search)
+    # prendre les éléments issus de la modale de /images, et les écrire dans les entrées indiquées 
 
 def tags_update(request, id):
     search = request.GET.get('q')
     sort_by_creation = request.GET.get('sort_by_creation')
     random = request.GET.get('random')
-    print('//////////// tags_update')
-    print('//////////////::', random)
-    # if this is a POST request we need to process the form data
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
         form = TagsForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            # print(form.cleaned_data['tags'])
             new_record = Image.objects.get(id=id)
             tags_record = format_tags_update(form.cleaned_data['tags'])
 
             new_record.tags  = tags_record
             print('----------------')
-            # print(Image.objects.all().values())
             print(new_record)
             print(new_record.tags)
             print(tags_record)
             print('----------------')
             new_record.save()
 
-            # print(new_record)
-            # ...
             # redirect to a new URL:
             return HttpResponseRedirect("/image/"+str(id)+"?q="+search+"&sort_by_creation="+sort_by_creation+"&random="+random)
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = TagsForm()
-
-    print('////////////////:',search)
 
     return render(request, "image.html", {
         "form": form,

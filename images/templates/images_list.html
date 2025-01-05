@@ -3,25 +3,60 @@
 {% block title %}
 Pinboard Manager
 {% endblock %}
+
+
 {% block content %}
+{% if action == 'names_update' or action == 'tags_update' %}
+<div id="names-update-confirmation" class="z-50 w-full h-full absolute bg-black/75 top-0 left-0 flex">
+    <div class="w-96 mx-auto my-auto p-4 rounded bg-white flex flex-col">
+        {% if action == 'names_update' %}
+        <div class="mb-4">Modifier le nom de la sélection</div>
+        <div class="text-sm text-muted">{{items}}</div>
+        <form id="bulk-names-update" method="post" action="{% url 'bulk_names_update' %}?q={{search}}">
+            {% csrf_token %}
+            <input type="text" id="bulk-names" name="bulk-names"/>
+            <div class="flex flex-row">
+                <input type="submit" value="Mettre à jour" />
+                <a href="{% url 'images' %}?q={{search}}" class="button">Annuler</a>
+            </div>
+        </form>
+        {% elif action == 'tags_update' %}
+        <div class="mb-4">Modifier les étiquettes de la sélection</div>
+        <div class="text-sm text-muted">{{items}}</div>
+        <form id="bulk-tags-update" method="post" action="{% url 'bulk_tags_update' %}?q={{search}}">
+            {% csrf_token %}
+            <input type="text" id="bulk-tags" name="bulk-tags"/>
+            <div class="flex flex-row">
+                <input type="submit" value="Mettre à jour" />
+                <a href="{% url 'images' %}?q={{search}}" class="button">Annuler</a>
+            </div>
+        </form>
+        {% endif %}
+
+    </div>
+</div>
+{% endif %}
 <div id="header" class="fixed bg-gray-100 dark:bg-gray-900 p-4 w-screen flex items-center top-0 left-0 z-40">
     <div id="search-form" class="">
-        <form action="{% url 'images' %}" method="get" >
-
+        <form action="{% url 'images' %}" method="get">
             {% if search%}
-            <input name="q" type="text" placeholder="Search..." value="{{search}}" class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
+            <input name="q" type="text" placeholder="Search..." value="{{search}}"
+                class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
             {% else %}
-            <input name="q" type="text" placeholder="Search..." class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
+            <input name="q" type="text" placeholder="Search..."
+                class="flex flex-row rounded px-2 py-1 bg-white dark:bg-gray-700 dark:text-white mr-2">
             {% endif %}
         </form>
     </div>
     <div class="flex flex-row w-full">
         {% if search%}
-        <a class="mr-2 button" href="http://{{request.get_host}}?random=1&q={{search}}">Random</a>
-        <a class="mr-2 button" href="http://{{request.get_host}}?sort_by_creation=1&q={{search}}">Trier par date</a>
+        <p class="mr-2">Tri</p>
+        <a class="button" href="http://{{request.get_host}}?random=1&q={{search}}">Random</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}?sort_by_creation=1&q={{search}}">Date</a>
         {% else %}
-        <a class="mr-2 button" href="http://{{request.get_host}}?random=1">Random</a>
-        <a class="mr-2 button" href="http://{{request.get_host}}?sort_by_creation=1">Trier par date</a>
+        <p class="mr-2">Tri</p>
+        <a class="button" href="http://{{request.get_host}}?random=1">Random</a>
+        <a class="mr-2 button" href="http://{{request.get_host}}?sort_by_creation=1">Date</a>
         {% endif %}
 
         <div class="flex flex-row contains mr-4 items-center">
@@ -32,10 +67,17 @@ Pinboard Manager
             <input type="checkbox" id="theme-selector" name="theme-selector" class="p-2 rounded mr-2">
             <label for="theme-selector" class="text-sm text-gray-900 dark:text-white">Sombre</label>
         </div>
+        <div class="flex flex-row mr-6">
+            <a class="button" id="th-size-sm">S</a>
+            <a class="button active" id="th-size-md">M</a>
+            <a class="button" id="th-size-lg">L</a>
+        </div>
         <div class="flex flex-row">
-            <a class="button" id="th-size-sm">Petit</a>
-            <a class="button active" id="th-size-md">Moyen</a>
-            <a class="button" id="th-size-lg">Grand</a>
+            <p>Modif.</p>
+            <input type="submit" form="images-list" value="Tags"
+                formaction="{% url 'images' %}?q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}&action=tags_update" />
+            <input type="submit" form="images-list" value="Nom"
+                formaction="{% url 'images' %}?q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}&action=names_update" />
         </div>
     </div>
 
@@ -48,23 +90,33 @@ Pinboard Manager
 <div class="wrapper w-full mt-12">
     {% if is_search %}
     <div class="flex flex-row mb-4 items-center">
-        <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}"><img src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
+        <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}"><img
+                    src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
         <div class="">Résultats pour <span class="font-bold">{{search}}</span></div>
     </div>
-    {% endif %}   
-    <ul class="images-container flex flex-row flex-wrap justify-between w-full size-md" id="thumbnails-list">
-        {% if images %}
-        {% for i in images %}
-        {% if search %}
-        <li class="image-thumbnail"><a href="image/{{i.id}}?q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}" class="block rounded mr-4 mb-4 truncate bg-white dark:bg-gray-800"><img src="/data/thumbnails/{{i.thumb}}"/><p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p></a></li>
-        {% else %}
-        <li class="image-thumbnail"><a href="image/{{i.id}}?random={{random}}&sort_by_creation={{sort_by_creation}}" class="block rounded mr-4 mb-4 truncate bg-white dark:bg-gray-800"><img src="/data/thumbnails/{{i.thumb}}"/><p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p></a></li>
-        {% endif%}
-        {% endfor %}
-        {% else %}
-        <p>Pas de résultat</p>
-        {% endif %}
-    </ul>   
+    {% endif %}
+    <form id="images-list" method="post">
+        {% csrf_token %}
+        <ul class="images-container flex flex-row flex-wrap justify-between w-full size-md" id="thumbnails-list">
+            {% if images %}
+            {% for i in images %}
+            <li class="image-thumbnail">
+                <a href="{% url 'image' id=i.id %}?q={{search}}&random={{random}}&sort_by_creation={{sort_by_creation}}"
+                    class="block rounded mr-4 mb-4 truncate bg-white dark:bg-gray-800">
+                    <img src="/data/thumbnails/{{i.thumb}}" />
+                    <p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 hidden image-label">{{i.name}}</p>
+                    <div >
+                        <p class="text-xs text-gray-400 dark:text-gray-500 my-2 ml-2 image-label">{{i.tags}}</p>
+                    </div>
+                    <input type="checkbox" class="top-0" value={{i.id}} name="image-item">
+                </a>
+            </li>
+            {% endfor %}
+            {% else %}
+            <p>Pas de résultat</p>
+            {% endif %}
+        </ul>
+    </form>
 </div>
 
 {% endblock %}
