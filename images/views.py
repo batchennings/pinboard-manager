@@ -16,9 +16,7 @@ import operator
 import re
 from functools import reduce
 from .forms import TagsForm, NameForm
-
 from var_dump import var_dump
-
 
 data_folder='/Users/patjennings/Documents/pinboard_manager/data'
 data_thumbnails_folder='/Users/patjennings/Documents/pinboard_manager/data/thumbnails'
@@ -80,10 +78,10 @@ def images(request):
         def img_date(elem):
             return elem.date_created
         images.sort(reverse=True, key=img_date)
-        
+
     if is_random:
         shuffle(images)
-        
+
     if request.method == "POST":
         items = request.POST.getlist('image-item')
         print(items)
@@ -104,13 +102,13 @@ def images(request):
 def bulk_tags_update(request):
     search = request.GET.get('q')
     print(request)
-    
+
     template = loader.get_template('images_list.html')
     context = {
         'search' : search,
     }
     return HttpResponse(template.render(context, request))
-    # prendre les éléments issus de la modale de /images, et les écrire dans les entrées indiquées 
+    # prendre les éléments issus de la modale de /images, et les écrire dans les entrées indiquées
 
 def bulk_names_update(request):
     search = request.GET.get('q')
@@ -120,7 +118,7 @@ def bulk_names_update(request):
         'search' : search,
     }
     return HttpResponseRedirect("/?q="+search)
-    # prendre les éléments issus de la modale de /images, et les écrire dans les entrées indiquées 
+    # prendre les éléments issus de la modale de /images, et les écrire dans les entrées indiquées
 
 def tags_update(request, id):
     search = request.GET.get('q')
