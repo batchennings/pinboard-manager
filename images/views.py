@@ -18,8 +18,8 @@ from functools import reduce
 from .forms import TagsForm, NameForm
 from var_dump import var_dump
 
-data_folder='/Users/patjennings/Documents/pinboard_manager/data'
-data_thumbnails_folder='/Users/patjennings/Documents/pinboard_manager/data/thumbnails'
+data_folder='/Users/patjennings/code/batchennings/pinboard-manager/data'
+data_thumbnails_folder='/Users/patjennings/code/batchennings/pinboard-manager/data/thumbnails'
 
 # Create your views here.
 def images(request):
