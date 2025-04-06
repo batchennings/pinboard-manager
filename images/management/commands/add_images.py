@@ -21,6 +21,8 @@ from datetime import datetime
 import subprocess
 import ffmpeg
 
+BASEPATH = '/Users/patjennings/code/batchennings/pinboard-manager/'
+
 class Command(BaseCommand):
     help = 'Update database with new images'
 
@@ -33,9 +35,9 @@ class Command(BaseCommand):
         for i in images:
             presence_list.append(i['name'])
 
-        input_folder='/Users/patjennings/Documents/pinboard_manager/data/_new'
-        data_folder='/Users/patjennings/Documents/pinboard_manager/data'
-        data_thumbnails_folder='/Users/patjennings/Documents/pinboard_manager/data/thumbnails'
+        input_folder=BASEPATH+'data/_new'
+        data_folder=BASEPATH+'data'
+        data_thumbnails_folder=BASEPATH+'data/thumbnails'
 
         ext_images = ['.jpg', '.jpeg', '.JPEG', '.JPG', '.png', '.PNG', '.gif', '.webp']
         ext_videos = ['.m4v', '.mp4', '.mov']

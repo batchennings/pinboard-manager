@@ -1,6 +1,6 @@
 {% extends "master.html" %}
 {% load static %}
-{% block title %}
+    {% block title %}
 Pinboard Manager
 {% endblock %}
 
@@ -26,10 +26,10 @@ Pinboard Manager
         <form id="bulk-tags-update" method="post" action="{% url 'bulk_tags_update' %}?q={{search}}">
             {% csrf_token %}
             <input type="text" id="bulk-tags" name="bulk-tags"/>
-            <div class="flex flex-row">
-                <input type="submit" value="Mettre à jour" />
-                <a href="{% url 'images' %}?q={{search}}" class="button">Annuler</a>
-            </div>
+        <div class="flex flex-row">
+            <input type="submit" value="Mettre à jour" />
+            <a href="{% url 'images' %}?q={{search}}" class="button">Annuler</a>
+        </div>
         </form>
         {% endif %}
 
@@ -91,7 +91,7 @@ Pinboard Manager
     {% if is_search %}
     <div class="flex flex-row mb-4 items-center">
         <div class="w-6 h-6 mr-4 mt-1" id="back"><a href="{% url 'images' %}"><img
-                    src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
+            src="{% static 'assets/icons-700/arrow-left.svg' %}" alt="" /></a></div>
         <div class="">Résultats pour <span class="font-bold">{{search}}</span></div>
     </div>
     {% endif %}
